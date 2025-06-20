@@ -71,10 +71,10 @@ function formatUptime(seconds) {
 }
 
 export function startHealthServer() {
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
         console.log(`🏥 Health check server running on port ${PORT}`);
-        console.log(`📊 Health endpoint: http://localhost:${PORT}/health`);
-        console.log(`📈 Status endpoint: http://localhost:${PORT}/status`);
+        console.log(`📊 Health endpoint: http://0.0.0.0:${PORT}/health`);
+        console.log(`📈 Status endpoint: http://0.0.0.0:${PORT}/status`);
     });
 }
 
