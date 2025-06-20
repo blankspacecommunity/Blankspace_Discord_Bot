@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname, join } from 'path';
 import { readdirSync } from 'fs';
+import { startHealthServer } from './health-server.js';
 
 // Load environment variables
 dotenv.config();
@@ -75,9 +76,15 @@ const init = async () => {
         
         await loadCommands();
         await loadEvents();
-        
-        // Login to Discord
+          // Login to Discord
         await client.login(process.env.DISCORD_TOKEN);
+
+        // Start health server for monitoring (only in production or when explicitly enabled)
+        if (process.env.NODE_ENV === 'production' || process.env.ENABLE_HEALTH_SERVER === 'true') {
+            startHealthServer();
+        } else {
+            console.log('💡 Health server disabled (set ENABLE_HEALTH_SERVER=true to enable locally)');
+        }
     } catch (error) {
         console.error('❌ Failed to start bot:', error);
         process.exit(1);

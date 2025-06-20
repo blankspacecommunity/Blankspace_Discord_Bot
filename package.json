@@ -8,6 +8,7 @@
     "dev": "nodemon bot.js",
     "deploy": "node deploy-commands.js",
     "check": "node check-config.js",
+    "health": "cross-env ENABLE_HEALTH_SERVER=true node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -25,9 +26,11 @@
     "@babel/preset-react": "^7.23.3",
     "@babel/register": "^7.23.7",
     "discord.js": "^14.14.1",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "express": "^5.1.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^3.0.2"
   },
   "babel": {
