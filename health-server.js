@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // Health check endpoint for UptimeRobot
 app.get('/health', (req, res) => {
@@ -36,14 +36,9 @@ app.get('/status', (req, res) => {
     });
 });
 
-// Root endpoint
+// Root endpoint - Simple Hello World as per Render example
 app.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'Discord Bot is running!',
-        health_check: '/health',
-        detailed_status: '/status',
-        timestamp: new Date().toISOString()
-    });
+    res.send('Hello World!');
 });
 
 function getVersion() {
@@ -71,10 +66,10 @@ function formatUptime(seconds) {
 }
 
 export function startHealthServer() {
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`🏥 Health check server running on port ${PORT}`);
-        console.log(`📊 Health endpoint: http://0.0.0.0:${PORT}/health`);
-        console.log(`📈 Status endpoint: http://0.0.0.0:${PORT}/status`);
+    app.listen(port, '0.0.0.0', () => {
+        console.log(`Example app listening on port ${port}`);
+        console.log(`📊 Health endpoint: http://0.0.0.0:${port}/health`);
+        console.log(`📈 Status endpoint: http://0.0.0.0:${port}/status`);
     });
 }
 

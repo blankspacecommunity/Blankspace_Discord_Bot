@@ -15,6 +15,7 @@ const __dirname = dirname(__filename);
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers, // Required for member join events
     ],
 });
 
