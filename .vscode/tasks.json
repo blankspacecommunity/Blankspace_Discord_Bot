@@ -1,0 +1,48 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Discord Bot",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"start"
+			],
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Deploy Commands",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"deploy-commands.js"
+			],
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "Development Mode",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev"
+			],
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Install Dependencies",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"install"
+			],
+			"group": "build",
+			"problemMatcher": []
+		}
+	]
+}

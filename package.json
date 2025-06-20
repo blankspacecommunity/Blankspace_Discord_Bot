@@ -1,0 +1,44 @@
+{
+  "name": "discord-bot-jsx",
+  "version": "1.0.0",
+  "description": "A Discord bot built with Node.js and JSX support",
+  "main": "bot.js",
+  "type": "module",  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js",
+    "deploy": "node deploy-commands.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "nodejs",
+    "jsx"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.23.6",
+    "@babel/node": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/register": "^7.23.7",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-react",
+        {
+          "pragma": "React.createElement",
+          "pragmaFrag": "React.Fragment",
+          "throwIfNamespace": false
+        }
+      ]
+    ]
+  }
+}
