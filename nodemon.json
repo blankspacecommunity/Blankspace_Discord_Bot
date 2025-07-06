@@ -1,0 +1,9 @@
+{
+  "watch": ["src/", "config/", "index.js"],
+  "ext": "js",
+  "ignore": ["node_modules/", "*.log"],
+  "exec": "node index.js",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

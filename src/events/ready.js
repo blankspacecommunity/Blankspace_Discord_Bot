@@ -1,23 +1,12 @@
-import { Events, ActivityType } from 'discord.js';
+import { Events } from 'discord.js';
+import { Logger } from '../utils/logger.js';
 
-const event = {
+export default {
     name: Events.ClientReady,
     once: true,
-    async execute(client) {
-        console.log(`✅ Bot is ready! Logged in as ${client.user.tag}`);
-        console.log(`📊 Connected to ${client.guilds.cache.size} servers`);
-        console.log(`👥 Serving ${client.users.cache.size} users`);
-        
-        // Set bot activity/status
-        client.user.setActivity({
-            name: '/ping | Node.js Bot',
-            type: ActivityType.Playing,
-        });
-        
-        // Log some additional info
-        console.log(`🚀 Bot started at ${new Date().toLocaleString()}`);
-        console.log(`📝 Loaded ${client.commands.size} commands`);
-    },
+    
+    execute(client) {
+        Logger.success(`Ready! Logged in as ${client.user.tag}`);
+        Logger.info(`Bot is now online and ready to serve ${client.guilds.cache.size} guild(s)`);
+    }
 };
-
-export default event;

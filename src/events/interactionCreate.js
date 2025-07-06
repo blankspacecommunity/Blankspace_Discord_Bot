@@ -1,54 +1,70 @@
 import { Events } from 'discord.js';
+import { Logger } from '../utils/logger.js';
 
-const event = {
+export default {
     name: Events.InteractionCreate,
+    
     async execute(interaction) {
-        // Handle slash commands
-        if (interaction.isChatInputCommand()) {
-            const command = interaction.client.commands.get(interaction.commandName);
-
-            if (!command) {
-                console.error(`❌ No command matching ${interaction.commandName} was found.`);
-                return;
-            }
-
-            try {
-                console.log(`🔧 Executing command: ${interaction.commandName} by ${interaction.user.tag}`);
-                await command.execute(interaction);
-            } catch (error) {
-                console.error(`❌ Error executing command ${interaction.commandName}:`, error);
+        try {
+            if (interaction.isChatInputCommand()) {
+                const command = interaction.client.commands.get(interaction.commandName);
                 
-                const errorMessage = {
-                    content: '❌ There was an error while executing this command!',
-                    ephemeral: true
-                };
-
-                if (interaction.replied || interaction.deferred) {
-                    await interaction.followUp(errorMessage);
-                } else {
-                    await interaction.reply(errorMessage);
+                if (!command) {
+                    Logger.warn(`No command matching ${interaction.commandName} was found.`);
+                    return;
                 }
+                
+                Logger.info(`Executing command: ${interaction.commandName} by ${interaction.user.tag}`);
+                await command.execute(interaction);
+                
+            } else if (interaction.isButton()) {
+                const button = interaction.client.components.buttons.get(interaction.customId);
+                
+                if (!button) {
+                    Logger.warn(`No button matching ${interaction.customId} was found.`);
+                    return;
+                }
+                
+                Logger.info(`Button clicked: ${interaction.customId} by ${interaction.user.tag}`);
+                await button.execute(interaction);
+                
+            } else if (interaction.isModalSubmit()) {
+                const modal = interaction.client.components.modals.get(interaction.customId);
+                
+                if (!modal) {
+                    Logger.warn(`No modal matching ${interaction.customId} was found.`);
+                    return;
+                }
+                
+                Logger.info(`Modal submitted: ${interaction.customId} by ${interaction.user.tag}`);
+                await modal.execute(interaction);
+                
+            } else if (interaction.isStringSelectMenu()) {
+                const selectMenu = interaction.client.components.selectMenus.get(interaction.customId);
+                
+                if (!selectMenu) {
+                    Logger.warn(`No select menu matching ${interaction.customId} was found.`);
+                    return;
+                }
+                
+                Logger.info(`Select menu used: ${interaction.customId} by ${interaction.user.tag}`);
+                await selectMenu.execute(interaction);
+            }
+            
+        } catch (error) {
+            Logger.error(`Error executing interaction: ${error.message}`);
+            console.error(error);
+            
+            const errorMessage = {
+                content: 'There was an error while executing this interaction!',
+                ephemeral: true
+            };
+            
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp(errorMessage);
+            } else {
+                await interaction.reply(errorMessage);
             }
         }
-        
-        // Handle button interactions
-        else if (interaction.isButton()) {
-            console.log(`🔘 Button interaction: ${interaction.customId} by ${interaction.user.tag}`);
-            // Add button handling logic here if needed
-        }
-        
-        // Handle select menu interactions
-        else if (interaction.isAnySelectMenu()) {
-            console.log(`📋 Select menu interaction: ${interaction.customId} by ${interaction.user.tag}`);
-            // Add select menu handling logic here if needed
-        }
-        
-        // Handle modal interactions
-        else if (interaction.isModalSubmit()) {
-            console.log(`📝 Modal submission: ${interaction.customId} by ${interaction.user.tag}`);
-            // Add modal handling logic here if needed
-        }
-    },
+    }
 };
-
-export default event;

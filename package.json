@@ -1,49 +1,26 @@
 {
-  "name": "discord-bot-jsx",
+  "name": "blankbot",
   "version": "1.0.0",
-  "description": "A Discord bot built with Node.js and JSX support",
-  "main": "bot.js",
-  "type": "module",  "scripts": {
-    "start": "node bot.js",
-    "dev": "nodemon bot.js",
-    "deploy": "node deploy-commands.js",
-    "check": "node check-config.js",
-    "health": "cross-env ENABLE_HEALTH_SERVER=true node bot.js",
-    "test": "node test-bot.js",
-    "test:welcome": "node test-welcome.js"
+  "description": "A minimal Discord bot for testing connectivity with slash commands, buttons, and select menus",
+  "main": "index.js",
+  "type": "module",
+
+  "scripts": {
+    "start": "node index.js",
+    "register": "node register-commands.js",
+    "invite": "node generate-invite.js",
+    "dev": "nodemon"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
   },
   "keywords": [
     "discord",
     "bot",
-    "nodejs",
-    "jsx"
+    "discord.js",
+    "slash-commands"
   ],
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "@babel/core": "^7.23.6",
-    "@babel/node": "^7.27.1",
-    "@babel/preset-env": "^7.27.2",
-    "@babel/preset-react": "^7.23.3",
-    "@babel/register": "^7.23.7",
-    "discord.js": "^14.14.1",
-    "dotenv": "^16.3.1",
-    "express": "^5.1.0"
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3",
-    "nodemon": "^3.0.2"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-react",
-        {
-          "pragma": "React.createElement",
-          "pragmaFrag": "React.Fragment",
-          "throwIfNamespace": false
-        }
-      ]
-    ]
-  }
+  "author": "Blankspace",
+  "license": "MIT"
 }
