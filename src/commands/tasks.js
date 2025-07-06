@@ -10,18 +10,48 @@ export default {
             option.setName('page')
                 .setDescription('Page number (default: 1)')
                 .setRequired(false)
-                .setMinValue(1)),
+                .setMinValue(1))
+        .addBooleanOption(option =>
+            option.setName('show-all')
+                .setDescription('Show all tasks including submitted ones (moderator only)')
+                .setRequired(false)),
 
     async execute(interaction) {
         const page = interaction.options.getInteger('page') || 1;
         const itemsPerPage = 5;
+        const showAll = interaction.options.getBoolean('show-all') || false;
 
         try {
-            const allTasks = database.getAllActiveTasks(interaction.guild.id);
+            // Check if user is moderator for show-all option
+            const { config } = await import('../../config/config.js');
+            const isModerator = config.xpSystem.roles.moderator && 
+                              interaction.member.roles.cache.has(config.xpSystem.roles.moderator);
+
+            let allTasks;
+            let titleSuffix = '';
+            
+            if (showAll && isModerator) {
+                // Moderators can see all tasks
+                allTasks = database.getAllActiveTasks(interaction.guild.id);
+                titleSuffix = ' (All Tasks)';
+            } else {
+                // Regular users see only available tasks (excluding submitted ones)
+                allTasks = database.getAvailableTasksForUser(interaction.guild.id, interaction.user.id);
+            }
             
             if (allTasks.length === 0) {
+                // Check if user has submitted all tasks
+                const submittedTasks = database.getUserSubmittedTasks(interaction.guild.id, interaction.user.id);
+                const totalTasks = database.getAllActiveTasks(interaction.guild.id);
+                
+                let message = '📭 No available tasks at the moment!';
+                if (submittedTasks.length > 0 && totalTasks.length > 0 && !showAll) {
+                    message += `\n\n🎯 You have submitted **${submittedTasks.length}** out of **${totalTasks.length}** available tasks.`;
+                    message += '\n💡 Use `/my-submissions` to check your submission status or wait for new tasks to be created!';
+                }
+                
                 return await interaction.reply({
-                    content: '📭 No active tasks available at the moment!',
+                    content: message,
                     ephemeral: true
                 });
             }
@@ -32,11 +62,11 @@ export default {
             const tasks = allTasks.slice(startIndex, endIndex);
 
             const embed = new EmbedBuilder()
-                .setTitle('📋 Available Tasks')
+                .setTitle(`📋 Available Tasks${titleSuffix}`)
                 .setColor(0x3498db)
-                .setDescription(`Page ${page} of ${totalPages} • ${allTasks.length} total tasks`)
+                .setDescription(`Page ${page} of ${totalPages} • ${allTasks.length} tasks ${showAll && isModerator ? 'total' : 'available for you'}`)
                 .setTimestamp()
-                .setFooter({ text: 'Complete tasks to earn XP and level up!' });
+                .setFooter({ text: showAll && isModerator ? 'Moderator view: All tasks shown' : 'Complete tasks to earn XP! Submitted tasks won\'t appear here. Use /my-submissions to view your submissions.' });
 
             for (const task of tasks) {
                 let fieldValue = '';

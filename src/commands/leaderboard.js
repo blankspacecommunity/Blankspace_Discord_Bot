@@ -5,7 +5,7 @@ import { config } from '../../config/config.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
-        .setDescription('View the server XP leaderboard')
+        .setDescription('View the server XP leaderboard (classic version)')
         .addIntegerOption(option =>
             option.setName('limit')
                 .setDescription('Number of users to show (default: 10, max: 25)')

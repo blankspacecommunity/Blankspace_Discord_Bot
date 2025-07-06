@@ -28,6 +28,10 @@ export default {
                 await handleModalInteraction(interaction);
                 
             } else if (interaction.isStringSelectMenu()) {
+                // Handle rank command components first
+                await handleRankComponents(interaction);
+                if (interaction.replied || interaction.deferred) return;
+                
                 const selectMenu = interaction.client.components.selectMenus.get(interaction.customId);
                 
                 if (!selectMenu) {
@@ -59,6 +63,10 @@ export default {
 
 async function handleButtonInteraction(interaction) {
     const customId = interaction.customId;
+    
+    // Handle rank command components
+    await handleRankComponents(interaction);
+    if (interaction.replied || interaction.deferred) return;
     
     // Handle dynamic task submission buttons
     if (customId.startsWith('submit_task_')) {
@@ -418,6 +426,348 @@ async function showSubmissionDetail(interaction, submissionId) {
         console.error('Error showing submission detail:', error);
         await interaction.reply({
             content: '❌ Error fetching submission details.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleRankComponents(interaction) {
+    const customId = interaction.customId;
+    
+    // Handle rank command button interactions
+    if (customId === 'refresh_rank') {
+        await handleRefreshRank(interaction);
+        return;
+    }
+    
+    if (customId === 'view_leaderboard') {
+        await handleViewLeaderboard(interaction);
+        return;
+    }
+    
+    if (customId === 'my_submissions') {
+        await handleMySubmissions(interaction);
+        return;
+    }
+    
+    if (customId === 'refresh_leaderboard') {
+        await handleRefreshLeaderboard(interaction);
+        return;
+    }
+    
+    if (customId === 'my_rank') {
+        await handleMyRank(interaction);
+        return;
+    }
+    
+    if (customId === 'top_contributors') {
+        await handleTopContributors(interaction);
+        return;
+    }
+    
+    if (customId === 'switch_to_cards') {
+        await handleSwitchToCards(interaction);
+        return;
+    }
+    
+    if (customId === 'switch_to_image') {
+        await handleSwitchToImage(interaction);
+        return;
+    }
+    
+    if (customId === 'my_rank_card') {
+        await handleMyRankCard(interaction);
+        return;
+    }
+    
+    // Handle rank command select menu interactions
+    if (customId === 'rank_options') {
+        await handleRankOptions(interaction);
+        return;
+    }
+    
+    if (customId === 'leaderboard_filter') {
+        await handleLeaderboardFilter(interaction);
+        return;
+    }
+    
+    if (customId === 'leaderboard_size') {
+        await handleLeaderboardSize(interaction);
+        return;
+    }
+}
+
+async function handleRefreshRank(interaction) {
+    try {
+        const rankCommand = interaction.client.commands.get('rank');
+        if (rankCommand) {
+            await rankCommand.execute(interaction);
+        }
+    } catch (error) {
+        console.error('Error refreshing rank:', error);
+        await interaction.reply({
+            content: '❌ Error refreshing rank data.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleViewLeaderboard(interaction) {
+    try {
+        const rankCommand = interaction.client.commands.get('rank');
+        if (rankCommand) {
+            // Create a mock interaction for the rank command with embed display
+            const mockOptions = {
+                getString: (name) => name === 'display' ? 'embed' : null,
+                getInteger: (name) => null,
+                getUser: (name) => null
+            };
+            const mockInteraction = { ...interaction, options: mockOptions };
+            await rankCommand.execute(mockInteraction);
+        }
+    } catch (error) {
+        console.error('Error viewing leaderboard:', error);
+        await interaction.reply({
+            content: '❌ Error viewing leaderboard.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleMySubmissions(interaction) {
+    try {
+        const mySubmissionsCommand = interaction.client.commands.get('my-submissions');
+        if (mySubmissionsCommand) {
+            await mySubmissionsCommand.execute(interaction);
+        }
+    } catch (error) {
+        console.error('Error viewing my submissions:', error);
+        await interaction.reply({
+            content: '❌ Error viewing your submissions.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleRefreshLeaderboard(interaction) {
+    try {
+        const rankCommand = interaction.client.commands.get('rank');
+        if (rankCommand) {
+            await rankCommand.execute(interaction);
+        }
+    } catch (error) {
+        console.error('Error refreshing leaderboard:', error);
+        await interaction.reply({
+            content: '❌ Error refreshing leaderboard.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleMyRank(interaction) {
+    try {
+        const rankCommand = interaction.client.commands.get('rank');
+        if (rankCommand) {
+            // Create a mock interaction for the rank command with personal display
+            const mockOptions = {
+                getString: (name) => name === 'display' ? 'personal' : null,
+                getInteger: (name) => null,
+                getUser: (name) => null
+            };
+            const mockInteraction = { ...interaction, options: mockOptions };
+            await rankCommand.execute(mockInteraction);
+        }
+    } catch (error) {
+        console.error('Error viewing my rank:', error);
+        await interaction.reply({
+            content: '❌ Error viewing your rank.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleTopContributors(interaction) {
+    try {
+        const leaderboardCommand = interaction.client.commands.get('leaderboard');
+        if (leaderboardCommand) {
+            await leaderboardCommand.execute(interaction);
+        } else {
+            await interaction.reply({
+                content: '🏆 Top Contributors feature coming soon!',
+                ephemeral: true
+            });
+        }
+    } catch (error) {
+        console.error('Error viewing top contributors:', error);
+        await interaction.reply({
+            content: '❌ Error viewing top contributors.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleSwitchToCards(interaction) {
+    try {
+        const rankCommand = interaction.client.commands.get('rank');
+        if (rankCommand) {
+            // Create a mock interaction for the rank command with cards display
+            const mockOptions = {
+                getString: (name) => name === 'display' ? 'cards' : null,
+                getInteger: (name) => null,
+                getUser: (name) => null
+            };
+            const mockInteraction = { ...interaction, options: mockOptions };
+            await rankCommand.execute(mockInteraction);
+        }
+    } catch (error) {
+        console.error('Error switching to cards view:', error);
+        await interaction.reply({
+            content: '❌ Error switching to cards view.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleSwitchToImage(interaction) {
+    try {
+        const rankCommand = interaction.client.commands.get('rank');
+        if (rankCommand) {
+            // Create a mock interaction for the rank command with image display
+            const mockOptions = {
+                getString: (name) => name === 'display' ? 'image' : null,
+                getInteger: (name) => null,
+                getUser: (name) => null
+            };
+            const mockInteraction = { ...interaction, options: mockOptions };
+            await rankCommand.execute(mockInteraction);
+        }
+    } catch (error) {
+        console.error('Error switching to image view:', error);
+        await interaction.reply({
+            content: '❌ Error switching to image view.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleMyRankCard(interaction) {
+    try {
+        const rankCommand = interaction.client.commands.get('rank');
+        if (rankCommand) {
+            // Create a mock interaction for the rank command with personal display
+            const mockOptions = {
+                getString: (name) => name === 'display' ? 'personal' : null,
+                getInteger: (name) => null,
+                getUser: (name) => null
+            };
+            const mockInteraction = { ...interaction, options: mockOptions };
+            await rankCommand.execute(mockInteraction);
+        }
+    } catch (error) {
+        console.error('Error viewing my rank card:', error);
+        await interaction.reply({
+            content: '❌ Error viewing your rank card.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleRankOptions(interaction) {
+    const selectedValue = interaction.values[0];
+    
+    try {
+        switch (selectedValue) {
+            case 'personal_card':
+                await handleMyRankCard(interaction);
+                break;
+            case 'detailed_stats':
+                await interaction.reply({
+                    content: '📊 Detailed statistics feature coming soon!',
+                    ephemeral: true
+                });
+                break;
+            case 'compare_users':
+                await interaction.reply({
+                    content: '⚖️ User comparison feature coming soon!',
+                    ephemeral: true
+                });
+                break;
+            default:
+                await interaction.reply({
+                    content: '❓ Unknown option selected.',
+                    ephemeral: true
+                });
+        }
+    } catch (error) {
+        console.error('Error handling rank options:', error);
+        await interaction.reply({
+            content: '❌ Error processing your selection.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleLeaderboardFilter(interaction) {
+    const selectedValue = interaction.values[0];
+    
+    try {
+        switch (selectedValue) {
+            case 'all_time':
+                await handleRefreshLeaderboard(interaction);
+                break;
+            case 'monthly':
+                await interaction.reply({
+                    content: '📅 Monthly leaderboard feature coming soon!',
+                    ephemeral: true
+                });
+                break;
+            case 'most_active':
+                await interaction.reply({
+                    content: '📈 Most active users feature coming soon!',
+                    ephemeral: true
+                });
+                break;
+            case 'level_range':
+                await interaction.reply({
+                    content: '🎯 Level range filter feature coming soon!',
+                    ephemeral: true
+                });
+                break;
+            default:
+                await interaction.reply({
+                    content: '❓ Unknown filter selected.',
+                    ephemeral: true
+                });
+        }
+    } catch (error) {
+        console.error('Error handling leaderboard filter:', error);
+        await interaction.reply({
+            content: '❌ Error processing filter selection.',
+            ephemeral: true
+        });
+    }
+}
+
+async function handleLeaderboardSize(interaction) {
+    const selectedValue = interaction.values[0];
+    const limit = parseInt(selectedValue);
+    
+    try {
+        const rankCommand = interaction.client.commands.get('rank');
+        if (rankCommand) {
+            // Create a mock interaction for the rank command with specified limit
+            const mockOptions = {
+                getString: (name) => null,
+                getInteger: (name) => name === 'limit' ? limit : null,
+                getUser: (name) => null
+            };
+            const mockInteraction = { ...interaction, options: mockOptions };
+            await rankCommand.execute(mockInteraction);
+        }
+    } catch (error) {
+        console.error('Error handling leaderboard size:', error);
+        await interaction.reply({
+            content: '❌ Error processing size selection.',
             ephemeral: true
         });
     }

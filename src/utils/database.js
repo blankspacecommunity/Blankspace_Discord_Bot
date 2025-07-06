@@ -160,8 +160,29 @@ export class DatabaseManager {
         return this.db.prepare('SELECT * FROM tasks WHERE guild_id = ? AND active = 1 ORDER BY created_at DESC').all(guildId);
     }
 
-    deactivateTask(taskId) {
-        return this.db.prepare('UPDATE tasks SET active = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(taskId);
+    // Get tasks that are available for a specific user (excluding tasks they've already submitted)
+    getAvailableTasksForUser(guildId, userId) {
+        return this.db.prepare(`
+            SELECT t.* FROM tasks t
+            WHERE t.guild_id = ? AND t.active = 1
+            AND t.id NOT IN (
+                SELECT DISTINCT s.task_id FROM submissions s 
+                WHERE s.user_id = ? AND s.guild_id = ? AND s.task_id IS NOT NULL
+                AND s.status IN ('PENDING', 'APPROVED')
+            )
+            ORDER BY t.created_at DESC
+        `).all(guildId, userId, guildId);
+    }
+
+    // Get tasks that a user has submitted (for reference)
+    getUserSubmittedTasks(guildId, userId) {
+        return this.db.prepare(`
+            SELECT t.*, s.status as submission_status, s.created_at as submitted_at, s.id as submission_id
+            FROM tasks t
+            INNER JOIN submissions s ON t.id = s.task_id
+            WHERE s.guild_id = ? AND s.user_id = ? AND s.task_id IS NOT NULL
+            ORDER BY s.created_at DESC
+        `).all(guildId, userId);
     }
 
     // Submission methods

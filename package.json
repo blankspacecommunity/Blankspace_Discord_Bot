@@ -4,7 +4,6 @@
   "description": "A minimal Discord bot for testing connectivity with slash commands, buttons, and select menus",
   "main": "index.js",
   "type": "module",
-
   "scripts": {
     "start": "node index.js",
     "register": "node register-commands.js",
@@ -16,10 +15,14 @@
     "check-database": "node check-database.js"
   },
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.73",
+    "axios": "^1.10.0",
+    "better-sqlite3": "^9.2.2",
+    "canvas": "^3.1.2",
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1",
-    "sqlite3": "^5.1.6",
-    "better-sqlite3": "^9.2.2"
+    "sharp": "^0.34.2",
+    "sqlite3": "^5.1.6"
   },
   "keywords": [
     "discord",
