@@ -12,6 +12,11 @@ export class BotClient extends Client {
         super({
             intents: [
                 GatewayIntentBits.Guilds
+                // Note: MessageContent intent is privileged and needs to be enabled in Discord Developer Portal
+                // For basic XP functionality, we only need Guilds intent
+                // Uncomment these lines if you enable the privileged intents in Discord Developer Portal:
+                // GatewayIntentBits.GuildMessages,
+                // GatewayIntentBits.MessageContent
             ]
         });
 

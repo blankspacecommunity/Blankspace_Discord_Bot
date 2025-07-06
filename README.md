@@ -1,19 +1,52 @@
-# Discord Ping/Test Bot
+# Discord XP & Leveling Bot
 
-A minimal Discord bot for testing connectivity with slash commands, buttons, select menus, and modals.
+A Discord bot that gamifies community participation by rewarding XP and ranks when members complete tasks, subject to moderator verification. Built with discord.js v14.
 
 ## Features
 
-- **Slash Command `/ping`**: Responds with latency information and interactive components
-- **Button Components**: Show modal and cancel functionality
-- **Modal Components**: Text input collection and processing
-- **Select Menu Components**: Multi-option selection handling
-- **Modern Architecture**: Clean separation of concerns with proper event handling
+### 🎯 Core XP System
+- **XP Tracking**: Persistent XP and level system for all users
+- **Level Progression**: Configurable XP thresholds for each level
+- **Profile System**: View detailed user profiles with stats and progress
+- **Leaderboard**: Server-wide rankings by XP
+
+### 📝 Task Management
+- **Task Creation**: Moderators can create tasks with custom XP rewards
+- **Task Submission**: Users submit evidence of completed tasks
+- **Verification System**: Moderators approve/reject submissions with reasons
+- **Automated Posting**: Tasks posted to designated channels automatically
+
+### 🛡️ Moderation Features
+- **Manual XP Management**: Add, remove, set, or reset user XP
+- **Submission Review**: Queue system for pending task submissions
+- **Audit Logging**: All XP changes logged to verification channel
+- **Role-based Permissions**: Configurable moderator roles
+
+### 🎮 User Experience
+- **Interactive Buttons**: One-click task submissions and approvals
+- **Progress Tracking**: Visual progress bars and next level information
+- **Notifications**: DM notifications for approvals/rejections
+- **Success Metrics**: Submission success rates and statistics
+
+## Commands
+
+### Public Commands
+- `/profile [user]` - View your or another user's XP profile
+- `/leaderboard [limit]` - View the server XP leaderboard
+- `/tasks [page]` - Browse all available tasks
+- `/ping` - Test bot connectivity with interactive components
+
+### Moderator Commands
+- `/verify @user <xp> <reason> [submission_id]` - Verify submissions and award XP
+- `/create-task <title> <description> <xp_reward>` - Create new tasks
+- `/submissions [page]` - View and manage pending submissions
+- `/xp add/remove/set/reset @user <amount> <reason>` - Manage user XP manually
 
 ## Tech Stack
 
 - Node.js with ES6 modules
 - discord.js v14+
+- SQLite with better-sqlite3
 - dotenv for environment variables
 
 ## Project Structure
@@ -24,27 +57,42 @@ A minimal Discord bot for testing connectivity with slash commands, buttons, sel
 ├── package.json               # Dependencies and scripts
 ├── nodemon.json              # Development configuration
 ├── .env                      # Environment variables
+├── data/
+│   └── xp_system.db          # SQLite database
 ├── config/
-│   └── config.js            # Bot configuration
+│   └── config.js            # Bot and XP system configuration
 └── src/
     ├── commands/
-    │   └── ping.js          # Ping slash command
+    │   ├── ping.js          # Ping slash command
+    │   ├── profile.js       # User profile command
+    │   ├── leaderboard.js   # XP leaderboard command
+    │   ├── verify.js        # Submission verification command
+    │   ├── create-task.js   # Task creation command
+    │   ├── submissions.js   # Submissions management command
+    │   ├── tasks.js         # Tasks browser command
+    │   └── xp.js           # XP management command
     ├── components/
     │   ├── buttons/
-    │   │   ├── cancel.js    # Cancel button handler
-    │   │   └── showModal.js # Show modal button handler
+    │   │   ├── cancel.js           # Cancel button handler
+    │   │   ├── showModal.js        # Show modal button handler
+    │   │   ├── submitTask.js       # Task submission button
+    │   │   ├── approveSubmission.js # Approve submission button
+    │   │   └── rejectSubmission.js  # Reject submission button
     │   ├── modals/
-    │   │   └── testModal.js # Test modal handler
+    │   │   ├── testModal.js           # Test modal handler
+    │   │   └── taskSubmissionModal.js # Task submission modal
     │   └── selectMenus/
     │       └── testSelect.js # Test select menu handler
     ├── events/
     │   ├── error.js         # Error event handler
-    │   ├── interactionCreate.js # Interaction router
+    │   ├── interactionCreate.js # Interaction router with XP handling
     │   └── ready.js         # Ready event handler
     └── utils/
         ├── BotClient.js     # Extended Discord client
         ├── embedUtils.js    # Embed creation utilities
-        └── logger.js        # Logging utilities
+        ├── logger.js        # Logging utilities
+        ├── database.js      # Database management and queries
+        └── xpManager.js     # XP calculations and level management
 ```
 
 ## Setup Instructions

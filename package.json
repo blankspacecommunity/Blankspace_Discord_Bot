@@ -9,11 +9,17 @@
     "start": "node index.js",
     "register": "node register-commands.js",
     "invite": "node generate-invite.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "setup": "node setup.js",
+    "test-permissions": "node test-permissions.js",
+    "check-guilds": "node check-guilds.js",
+    "check-database": "node check-database.js"
   },
   "dependencies": {
     "discord.js": "^14.14.1",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "sqlite3": "^5.1.6",
+    "better-sqlite3": "^9.2.2"
   },
   "keywords": [
     "discord",
